@@ -1,0 +1,23 @@
+{
+  "name": "votingsystem",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Praveen880890/voting_platform.git"
+  },
+  "author": "Praveen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Praveen880890/voting_platform/issues"
+  },
+  "homepage": "https://github.com/Praveen880890/voting_platform#readme",
+  "dependencies": {
+    "pg": "^8.8.0",
+    "pg-hstore": "^2.3.4"
+  }
+}
