@@ -11,6 +11,32 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      election.belongsTo(models.AdminCreate,{
+        foreignKey:"adminID"
+      });
+      election.hasMany(models.question, {
+        foreignKey: "electionID",
+      });
+      election.hasMany(models.voter, {
+        foreignKey: "electionID",
+      });
+      election.hasMany(models.Answers, {
+        foreignKey: "electionID",
+      });
+    }
+    static addElection({ elecName, id, cstmUrl }) {
+      return this.create({
+        elecName,
+        cstmUrl,
+        id,
+      });
+    }
+    static async getElections(id){
+      return this.findAll({
+        where:{
+          id,
+        }
+      })
     }
   }
   election.init({

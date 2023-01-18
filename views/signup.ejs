@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="./css/style.css">
+    <meta name="csrf-token" content="<%=csrfToken%>">
 </head>
 <body>
     <div class="relative flex min-h-screen text-gray-900 flex-col justify-center overflow-hidden py-6 sm:py-12">
@@ -20,7 +21,8 @@
             </div>
             <div class="mt-4 bg-white shadow-md rounded-lg text-left">
                 <form action="/admin" method="post" class="px-8 py-6">
-                    <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                    <input type="hidden" name="_csrf" value="<%=csrfToken%>" />
+                    
                     <label for="firstName" class="block mt-3 font-semibold">First name</label>
                     <input id="firstName" name="firstName" type="text" placeholder="First name" class="border w-full h-5 px-3 py-5 mt-2 rounded-md" required>
                     <label for="lastName" class="block mt-3 font-semibold">Last name</label>

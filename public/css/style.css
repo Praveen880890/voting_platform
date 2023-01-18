@@ -1,8 +1,13 @@
 body {
     background-color: ghostwhite;
     font-family: sans-serif;
+    overflow-y: hidden;
 }
 .var{
     justify-content: center;
     align-items: center;
+}
+.cent{
+    margin: auto;
+    text-align: center;
 }

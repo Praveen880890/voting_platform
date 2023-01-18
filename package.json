@@ -12,14 +12,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Praveen880890/voting_platform.git"
+    "url": "git+https://github.com/Indhralochan/Online-Voting-Platform.git"
   },
-  "author": "Praveen",
+  "author": "Indhralochan",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Praveen880890/voting_platform/issues"
+    "url": "https://github.com/Indhralochan/Online-Voting-Platform/issues"
   },
-  "homepage": "https://github.com/Praveen880890/voting_platform#readme",
+  "homepage": "https://github.com/Indhralochan/Online-Voting-Platform#readme",
   "dependencies": {
     "bcrypt": "^5.1.0",
     "connect-ensure-login": "^0.1.1",
@@ -37,7 +37,9 @@
     "pg": "^8.8.0",
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.28.0",
-    "sequelize-cli": "^6.5.2",
+    "sequelize-cli": "^6.5.2"
+  },
+  "devDependencies": {
     "tiny-csrf": "^1.1.3"
   }
 }
