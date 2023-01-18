@@ -4,17 +4,45 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <title><%= title %></title>
 </head>
 <body>
-    <div>
-        <% if (messages.success) { %>
-            <p class="bg-pink-100 m-3 list-none rounded-md px-4 py-2"><%= messages.success %></p>
-        <% } %>
+    <%- include('header.ejs') %>
+    <div class="my-6 mx-10">
+        <div>
+            <% if (messages.success) { %>
+                <p class="bg-purple-100 m-3 list-none rounded-md px-4 py-2"><%= messages.success %></p>
+            <% } %>
+        </div>
+        <div>
+            <% if (messages && messages.error && messages.error.length > 0) { %>
+                <% for(var i=0; i<messages.error.length; i++) { %>
+                    <p class="bg-purple-100 my-3 list-none rounded-md px-4 py-2"><%= messages.error[i] %></p>
+                <% } %>
+            <% } %>
+        </div>
+        <h3 class="text-3xl my-4 font-semibold">Hello, <%= username %></h3>
+        <div class="flex gap-2 py-4 justify-between">
+            <h5 class="text-2xl">Your Elections</h5>
+            <div class="bg-green-800 rounded w-fit px-2 py-1 hover:bg-blue-800">
+                <a href="/election/create" class="text-white">+ Create a new election</a>
+            </div>
+        </div>
+        <div class="flex-auto">
+            <div class="mx-4">  
+                <p class="text-purple-600"><%= (election.length==0)?"You haven't created any elections yet!":"" %></p>
+                <ol class="list-decimal">
+                    <% for (let i=0; i<election.length; i++) { %>
+                        <li>
+                            <div class="flex items-center w-fit my-2 px-2 py-1 rounded hover:bg-purple-50">
+                                <a href="/election/<%= election[i].id %>" class="m-2 text-sm text-purple-600 "><%= election[i].elecName %></a>
+                            </div>
+                        </li>
+                    <% } %>
+                </ol>
+            </div>
+        </div>
     </div>
-    <a class="text-sm text-green-600 hover:text-blue-400 p-3" href="/password-reset" >Forgot password?</a>
-    <a class="text-sm text-green-600 hover:text-blue-400 p-3" href="/signout">Sign out</a>
 </body>
 </html>

@@ -2,7 +2,11 @@ const express = require("express");
 const app = express();
 const csrf = require("tiny-csrf");
 const cookieParser = require("cookie-parser");
-const { Admin } = require("./models");
+const { AdminCreate,
+        election,
+        options,
+        question,
+        voter } = require("./models");
 const bodyParser = require("body-parser");
 const path = require("path");
 const bcrypt = require("bcrypt");
@@ -30,9 +34,10 @@ app.use((request, response, next) => {
   response.locals.messages = request.flash();
   next();
 });
+//Initializing passport
 app.use(passport.initialize());
 app.use(passport.session());
-
+//using passport for authentication
 passport.use(
   new LocalStratergy(
     {
@@ -40,7 +45,7 @@ passport.use(
       passwordField: "password",
     },
     (username, password, done) => {
-      Admin.findOne({ where: { email: username } })
+      AdminCreate.findOne({ where: { email: username } })
         .then(async (user) => {
           const val = await bcrypt.compare(password, user.password);
           if (val) {
@@ -60,7 +65,7 @@ passport.serializeUser((user, done) => {
   done(null, user.id);
 });
 passport.deserializeUser((id, done) => {
-  Admin.findByPk(id)
+  AdminCreate.findByPk(id)
     .then((user) => {
       done(null, user);
     })
@@ -71,6 +76,7 @@ passport.deserializeUser((id, done) => {
 
 app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, "public")));
+
 
 app.get("/", (request, response) => {
   if (request.user) {
@@ -85,16 +91,36 @@ app.get("/", (request, response) => {
 app.get(
   "/election",
   connectEnsureLogin.ensureLoggedIn(),
-  (request, response) => {
-    response.render("election", {
-      title: "Online Voting Platform",
-    });
+  async (request, response) => {
+    if (request.user.role === "admin") {
+      let username = request.user.firstName +" "+ request.user.lastName;
+      try {
+        const elections = await election.getElections(request.user.id);
+        if (request.accepts("html")) {
+          response.render("election", {
+            title: "Online Voting Platform",
+            username,
+            elections,
+            csrfToken: request.csrfToken(),
+          });
+        } else {
+          return response.json({
+            elections,
+          });
+        }
+      } catch (error) {
+        console.log(error);
+        return response.status(422).json(error);
+      }
+    } else if (request.user.role === "voter") {
+      return response.redirect("/");
+    }
   }
 );
 
 app.get("/signup", (request, response) => {
   response.render("signup", {
-    title: "Create a new account",
+    title: "Admin Create a new account",
     csrfToken: request.csrfToken(),
   });
 });
@@ -162,7 +188,7 @@ app.post(
       request.user.password
     );
     if (val) {
-      Admin.findOne({ where: { email: request.user.email } }).then((user) => {
+      AdminCreate.findOne({ where: { email: request.user.email } }).then((user) => {
         user.resetPass(newPassword);
       });
       request.flash("success", "Password changed successfully");
@@ -177,7 +203,7 @@ app.post(
 app.post("/admin", async (request, response) => {
   const Pwd = await bcrypt.hash(request.body.password, saltRounds);
   try {
-    const admin = await Admin.create({
+    const admin = await AdminCreate.create({
       firstName: request.body.firstName,
       lastName: request.body.lastName,
       email: request.body.email,
@@ -190,7 +216,7 @@ app.post("/admin", async (request, response) => {
         response.redirect("/election");
       }
     });
-  } catch (error) {
+  } catch (error){
     request.flash("error", error.message);
     return response.redirect("/signup");
   }

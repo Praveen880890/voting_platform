@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+    <div class="relative flex min-h-screen text-gray-900 flex-col justify-center overflow-hidden py-6 sm:py-12">
+        <div class="relative py-3 sm:w-auto mx-auto text-center">
+            <span class="text-2xl font-light px-8 ">Create a new Account</span>
+            <div>
+                <% if (messages && messages.error && messages.error.length > 0) { %>
+                    <% for(var i=0; i<messages.error.length; i++) { %>
+                        <p class="bg-green-100 my-3 list-none rounded-md px-4 py-2"><%= messages.error[i] %></p>
+                    <% } %>
+                <% } %>
+            </div>
+            <div class="mt-4 bg-white shadow-md rounded-lg text-left">
+                <form action="/admin" method="post" class="px-8 py-6">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                    <label for="firstName" class="block mt-3 font-semibold">First name</label>
+                    <input id="firstName" name="firstName" type="text" placeholder="First name" class="border w-full h-5 px-3 py-5 mt-2 rounded-md" required>
+                    <label for="lastName" class="block mt-3 font-semibold">Last name</label>
+                    <input id="lastName" name="lastName" type="text" placeholder="Last name" class="border w-full h-5 px-3 py-5 mt-2 " required>
+                    <label for="email" class="block mt-3 font-semibold">Email</label>
+                    <input id="email" name="email" type="email" placeholder="Email" class="border w-full h-5 px-3 py-5 mt-2" required>
+                    <label for="password" class="block mt-3 font-semibold">Password</label>
+                    <input id="password" name="password" type="password" placeholder="Password" class="border w-full h-5 px-3 py-5 mt-2" required>
+                    <button type="submit" class="mt-6 bg-green-600 w-full text-white py-2 px-6 rounded-md hover:bg-blue-800 ">Create account</button>
+                </form>
+            </div>
+            <div class="mt-4">
+                <p>have an account?</p><a href="/signin" class="text-sm hover:text-blue-900"> Sign up</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

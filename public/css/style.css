@@ -2,3 +2,7 @@ body {
     background-color: ghostwhite;
     font-family: sans-serif;
 }
+.var{
+    justify-content: center;
+    align-items: center;
+}
