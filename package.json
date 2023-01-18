@@ -12,14 +12,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Indhralochan/Online-Voting-Platform.git"
+    "url": "git+https://github.com/Praveen880890/voting_platform.git"
   },
-  "author": "Indhralochan",
+  "author": "Praveen",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Indhralochan/Online-Voting-Platform/issues"
+    "url": "https://github.com/Praveen880890/voting_platform/issues"
   },
-  "homepage": "https://github.com/Indhralochan/Online-Voting-Platform#readme",
+  "homepage": "https://github.com/Praveen880890/voting_platform#readme",
   "dependencies": {
     "bcrypt": "^5.1.0",
     "connect-ensure-login": "^0.1.1",

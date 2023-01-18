@@ -8,9 +8,10 @@
     <link rel="stylesheet" href="./css/style.css">
     <title><%= title %></title>
 </head>
-<body>
-    <div class="cent"><%- include('header.ejs') %></div>
-    <div class="my-6 mx-10">
+<body class="bg-sky-100">
+    <div class="text-center"><%- include('header.ejs') %></div>
+    <div class="block mt-3 text-3xl py-3 max-w-full text-center justify-center">Create a New Election</div>
+    <div class="my-6 mx-10 md:flex md:justify-center">
         <div>
             <% if (messages.success) { %>
                 <p class="bg-orange-200 m-3 list-none rounded-md px-4 py-2"><%= messages.success %></p>
@@ -23,18 +24,17 @@
                 <% } %>
             <% } %>
         </div>
-        <div class="relative flex min-h-screen flex-col justify-center overflow-hidden py-6">
-        <div class="mt-4 shadow-md rounded-lg text-center mx-auto">
-            <form action="/election" method="post" class="px-8 py-6">
+        <div class="mt-4 bg-white shadow-md rounded-lg text-left max-w-xl md:items-center">
+            <form action="/election" method="post" class="md:flex md:justify-center mb-6 px-8 py-6 bg-white rounded-lg flex flex-col">
                 <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
-                <label for="elecName" class="block mt-3 font-semibold">Enter your election's name</label>
-                <input id="elecName" name="elecName" type="text" placeholder="Election name" class="border w-full h-5 px-3 py-5 mt-2  focus:ring-orange-500 rounded-md" required>
+                <label for="elecName" class="block mt-3 font-semibold py-3">Enter your election's name</label>
+                <input id="elecName" name="elecName" type="text" placeholder="Election name" class=" border w-full h-5 px-3 py-5 mt-2 hover:outline-none focus:outline-none focus:ring-blue-500 focus:ring-1 rounded-md" required>
                 <label for="cstmUrl" class="block mt-3 font-semibold">Enter a custom URL (With no spaces)</label>
-                <input id="cstmUrl" name="cstmUrl" type="text" placeholder="Election URL String" class="border w-full h-5 px-3 py-5 mt-2  focus:ring-orange-500 rounded-md" required>
-                <button type="submit" class="bg-orange-400 text-center rounded w-fit px-2 py-1 hover:bg-green-600 justify-center mx-auto text-center ">Create</button>
+                <input id="cstmUrl" name="cstmUrl" type="text" placeholder="Election URL String" class="border w-full h-5 px-3 py-5 mt-2 hover:outline-none focus:outline-none focus:ring-blue-500 focus:ring-1 rounded-md" required>
+                <button type="submit" class="mt-6 w-full bg-green-600 text-white py-2 px-6 rounded-md hover:bg-blue-800 ">Create</button>
             </form>
         </div>
-        </div>
+    </div>
     </div>
 </body>
 </html>

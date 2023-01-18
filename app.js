@@ -6,9 +6,11 @@ const { AdminCreate,
         election,
         options,
         question,
-        voter } = require("./models");
+        voter,
+      answers } = require("./models");
 const bodyParser = require("body-parser");
 const path = require("path");
+app.use(express.static(path.join(__dirname, "/public")));
 const bcrypt = require("bcrypt");
 const passport = require("passport");
 const connectEnsureLogin = require("connect-ensure-login");
@@ -34,10 +36,8 @@ app.use((request, response, next) => {
   response.locals.messages = request.flash();
   next();
 });
-//Initializing passport
 app.use(passport.initialize());
 app.use(passport.session());
-//using passport for authentication
 passport.use(
   new LocalStratergy(
     {
@@ -60,7 +60,6 @@ passport.use(
     }
   )
 );
-
 passport.serializeUser((user, done) => {
   done(null, user.id);
 });
@@ -73,11 +72,7 @@ passport.deserializeUser((id, done) => {
       done(error, null);
     });
 });
-
 app.set("view engine", "ejs");
-app.use(express.static(path.join(__dirname, "public")));
-
-
 app.get("/", (request, response) => {
   if (request.user) {
     return response.redirect("/election");
@@ -87,7 +82,6 @@ app.get("/", (request, response) => {
     });
   }
 });
-
 app.get(
   "/election",
   connectEnsureLogin.ensureLoggedIn(),
@@ -99,7 +93,7 @@ app.get(
           response.render("election", {
             title: "Online Voting Platform",
             username,
-            election,
+            elections,
             csrfToken: request.csrfToken(),
           });
         } else {
@@ -112,9 +106,7 @@ app.get(
         return response.status(422).json(error);
       }
     } 
-  
 );
-
 app.get("/signup", (request, response) => {
   console.log(request.csrfToken())
   response.render("signup", {
@@ -122,14 +114,12 @@ app.get("/signup", (request, response) => {
     csrfToken: request.csrfToken(),
   });
 });
-
 app.get("/login", (request, response) => {
   response.render("login", {
     title: "Login to your account",
     csrfToken: request.csrfToken(),
   });
 });
-
 app.get("/signout", (request, response, next) => {
   request.logout((err) => {
     if (err) {
@@ -138,7 +128,6 @@ app.get("/signout", (request, response, next) => {
     response.redirect("/");
   });
 });
-
 app.post(
   "/session",
   passport.authenticate("local", {
@@ -149,7 +138,6 @@ app.post(
     response.redirect("/election");
   }
 );
-
 app.get(
   "/pswdReset",
   connectEnsureLogin.ensureLoggedIn(),
@@ -160,7 +148,6 @@ app.get(
     });
   }
 );
-
 app.post(
   "/pswdReset",
   connectEnsureLogin.ensureLoggedIn(),
@@ -197,7 +184,6 @@ app.post(
     }
   }
 );
-
 app.post("/admin", async (request, response) => {
   const Pwd = await bcrypt.hash(request.body.password, saltRounds);
   try {
@@ -208,8 +194,10 @@ app.post("/admin", async (request, response) => {
       password: Pwd,
     
     });
+    console.log("hgfgfdjgdjthgfjhg");
     request.login(admin, (err) => {
       if (err) {
+        console.log("zqwwwwwwwwwwwwwwwq");
         return response.redirect("/");
       } else {
         return response.redirect("/election");
@@ -253,16 +241,203 @@ app.post(
         return response.redirect("/election/createNew");
       }
       try {
+        console.log("asdfads");
+        console.log(request.body.elecName);
+        console.log(request.body.cstmUrl);
+        console.log(request.user.id);
         await election.addElection({
           elecName: request.body.elecName,
           cstmUrl: request.body.cstmUrl,
-          id: request.user.id,
+          adminID: request.user.id,
         });
+        console.log("bbbbbbbb");
         return response.redirect("/election");
-      } catch (error) {
+      } 
+      catch (error) {
+        console.log(error);
         request.flash("error", "Election URL is already in use");
         return response.redirect("/election/createNew");
       }
   }
 );
+app.get(
+  "/election/:id",
+  connectEnsureLogin.ensureLoggedIn(),
+  async (request, response) => {
+      try {
+        const thiselection = await election.getElection(request.params.id);
+        if (request.user.id !== thiselection.adminID){
+          request.flash("error", "Invalid election ID");
+          return response.redirect("/election");
+        }
+        if (thiselection.ended) {
+          return response.redirect(`/election/${election.id}/results`);
+        }
+        const numberOfQuestions = await question.getNumberOfQuestions(
+          request.params.id
+        );
+        const numberOfVoters = await voter.getNumberOfVoters(request.params.id);
+        return response.render("ElectionOptions", {
+          id: request.params.id,
+          title: thiselection.elecName,
+          cstmUrl: thiselection.cstmUrl,
+          Running: thiselection.Running,
+          noQuestions: numberOfQuestions,
+          noVoters: numberOfVoters,
+          csrfToken: request.csrfToken(),
+        });
+      } catch (error) {
+        console.log(error);
+        return response.status(422).json(error);
+      }
+    }
+);
+app.get(
+  "/election/:id/questions",
+  connectEnsureLogin.ensureLoggedIn(),
+  async (request, response) => {
+      try {
+        const thiselection = await election.getElection(request.params.id);
+        if (request.user.id !== thiselection.adminID) {
+          request.flash("error", "Invalid election ID");
+          return response.redirect("/elections");
+        }
+        const thisquestions = await question.gtQuestn(request.params.id);
+        if (!thiselection.running && !thiselection.ended) {
+          if (request.accepts("html")) {
+            return response.render("questions", {
+              title: thiselection.elecName,
+              id: request.params.id,
+              Questions: thisquestions,
+              csrfToken: request.csrfToken(),
+            });
+          } else {
+            return response.json({
+              ElectionOptions,
+            });
+          }
+        } else {
+          if (thiselection.ended) {
+            request.flash("error", "Cannot edit when election has ended");
+          } else if (thiselection.running) {
+            request.flash("error", "Cannot edit while election is running");
+          }
+          return response.redirect(`/election/${request.params.id}/`);
+        }
+      } catch (error) {
+        console.log(error);
+        return response.status(422).json(error);
+      }
+    }
+);
+app.post(
+  "/election/:id/questions/create",
+  connectEnsureLogin.ensureLoggedIn(),
+  async (request, response) => {
+      if (request.body.question.length < 5) {
+        request.flash("error", "Question length should be atleast 5");
+        return response.redirect(
+          `/election/${request.params.id}/questions/create`
+        );
+      }
+
+      try {
+        const thiselection = await election.getElection(request.params.id);
+        if (request.user.id !== thiselection.adminID) {
+          request.flash("error", "Invalid election ID");
+          return response.redirect("/election");
+        }
+        if (thiselection.running) {
+          request.flash("error", "Can't the question edit while election is running");
+          return response.redirect(`/election/${request.params.id}/`);
+        }
+        if (thiselection.ended) {
+          request.flash("error", "Cannot edit when election has ended");
+          return response.redirect(`/election/${request.params.id}/`);
+        }
+        const thisquestion = await question.addQuestions({
+          elecQuestion: request.body.question,
+          elecDescription: request.body.description,
+          electionID: request.params.id,
+        });
+        return response.redirect(
+          `/election/${request.params.id}/questions/${thisquestion.id}`
+        );
+      } catch (error) {
+        console.log(error);
+        return response.status(422).json(error);
+      }
+    }
+);
+
+app.get(
+  "/election/:id/questions/create",
+  connectEnsureLogin.ensureLoggedIn(),
+  async (request, response) => {
+      try {
+        const thiselection = await election.getElection(request.params.id);
+        if (request.user.id !== thiselection.adminID) {
+          request.flash("error", "Invalid election ID");
+          return response.redirect("/election");
+        }
+        if (!thiselection.running) {
+          return response.render("questions", {
+            id: request.params.id,
+            csrfToken: request.csrfToken(),
+          });
+        } else {
+          if (thiselection.ended) {
+            request.flash("error", "Cannot edit when election has ended");
+            return response.redirect(`/election/${request.params.id}/`);
+          }
+          request.flash("error", "Cannot edit while election is running");
+          return response.redirect(`/election/${request.params.id}/`);
+        }
+      } catch (error) {
+        console.log(error);
+        return response.status(422).json(error);
+      }
+    }
+);
+app.get(
+  "/election/:id/questions/:questionID",
+  connectEnsureLogin.ensureLoggedIn(),
+  async (request, response) => {
+      try {
+        const thisquestion = await question.getQuestion(request.params.questionID);
+        const thisoptions = await options.getOptions(request.params.questionID);
+        const thiselection = await election.getElection(request.params.id);
+        if (request.user.id !== thiselection.adminID) {
+          request.flash("error", "Invalid election ID");
+          return response.redirect("/elections");
+        }
+        if (thiselection.running) {
+          request.flash("error", "Cannot edit while election is running");
+          return response.redirect(`/elections/${request.params.id}/`);
+        }
+        if (thiselection.ended) {
+          request.flash("error", "Cannot edit when election has ended");
+          return response.redirect(`/elections/${request.params.id}/`);
+        }
+        if (request.accepts("html")) {
+          response.render("question_page", {
+            title: question.question,
+            description: question.description,
+            id: request.params.id,
+            questionID: request.params.questionID,
+            thisoptions,
+            csrfToken: request.csrfToken(),
+          });
+        } else {
+          return response.json({
+            options,
+          });
+        }
+      } catch (error) {
+        console.log(error);
+        return response.status(422).json(error);
+      }
+    }
+);
+
 module.exports = app;

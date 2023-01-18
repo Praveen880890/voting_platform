@@ -21,6 +21,57 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "questionID",
       });
     }
+    static async getNumberOfQuestions(electionID) {
+      return await this.count({
+        where: {
+          electionID,
+        },
+      });
+    }
+    static async gtQuestn(id) {
+      return await this.findOne({
+        where: {
+          id,
+        },
+      });
+    }
+    static async gtQuestns(electionID) {
+      return await this.findAll({
+        where: {
+          electionID,
+        },
+        order: [["id", "ASC"]],
+      });
+    }
+    static async addQuestions({ elecQuestion, elecDescription, electionID }) {
+      return this.create({
+        elecQuestion,
+        elecDescription,
+        electionID,
+      });
+    }
+    static updateQuestion({ question, description, id }) {
+      return this.update(
+        {
+          question,
+          description,
+        },
+        {
+          returning: true,
+          where: {
+            id,
+          },
+        }
+      );
+    }
+    static deleteQuestion(id) {
+      return this.destroy({
+        where: {
+          id,
+        },
+      });
+    }
+
   }
   question.init({
     elecQuestion: DataTypes.STRING,
