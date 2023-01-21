@@ -25,6 +25,38 @@ module.exports = (sequelize, DataTypes) => {
         },
       });
     }
+    static async createVoter({ voterUnqid, voterUnqPswd, electionID }) {
+      return await this.create({
+        voterUnqid,
+        voterUnqPswd,
+        electionID,
+        didVote: false,
+        position:"voter"
+      });
+    }
+    static async countOFVoters(electionID) {
+      return await this.count({
+        where: {
+          electionID,
+        },
+      });
+    }
+    static async getAllVoters(electionID) {
+      return await this.findAll({
+        where: {
+          electionID,
+        },
+        order: [["id", "ASC"]],
+      });
+    }
+    static async getVoters(electionID) {
+      return await this.findAll({
+        where: {
+          electionID,
+        },
+        order: [["id", "ASC"]],
+      });
+    }
   }
   voter.init({
     voterUnqid: DataTypes.STRING,

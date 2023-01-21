@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="<%= csrfToken %>">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title><%= title %></title>
+    <script>
+        var token = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
+        function launchElection() {
+            let electionID = <%= electionID %>;
+            fetch(`/election/${electionID}/launch`, {
+                method: "put",
+                headers: {"Content-Type":"application/json"},
+                body: JSON.stringify({
+                    "_csrf":token,
+                })
+            }).then((res)=>{
+                if (res.ok) {
+                    window.location.replace(`/election/${electionID}`);
+                }
+            }).catch((err)=> console.error(err))
+        }
+    </script>
+</head>
+<body class="bg-sky-100">
+    <div class="text-center justify-center"><%- include('header.ejs') %></div>
+        <div class="w-full">
+            <div class="flex justify-between">
+                <span class="text-4xl font-light "><%= title %></span>
+                <div class="flex">
+                    <div class="bg-purple-100 border border-purple-700 text-orange-400 rounded w-fit px-4 pt-2 hover:text-white hover:bg-blue-600 mx-2">
+                        <a href="/elections/<%= electionID %>/">Edit election</a>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <% if (messages && messages.error && messages.error.length > 0) { %>
+                    <% for(var i=0; i<messages.error.length; i++) { %>
+                        <p class="bg-purple-100 my-3 list-none rounded-md px-4 py-2"><%= messages.error[i] %></p>
+                    <% } %>
+                <% } %>
+            </div>
+            <div class="mt-4 bg-gray-200 shadow-md rounded-lg text-left">
+                <div class="py-2 px-8">
+                    <ol class="list-decimal">
+                        <% for(let i=0; i<thisquestions.length; i++) { %>
+                            <li class="my-2">
+                                <div class="px-2 py-1">
+                                    <h3 class="text-2xl my-2"><%= thisquestions[i].elecQuestion %></h3>
+                                    <p class="text-black-600 text-md my-2"><%= thisquestions[i].elecDescription %></p>
+                                </div>
+                                <div class="ml-8">
+                                    <ol class="list-none">
+                                        <% for(let j=0; j<thisoptions[i].length; j++) { %>
+                                                <li class="option-item mt-2 cursor-pointer">
+                                                    <input type="radio" id="<%= thisoptions[i][j].id %>" class="cursor-pointer" name="answer-<%= thisquestions[i].id %>">
+                                                    <label class="px-1 my-2 cursor-pointer" for="<%= thisoptions[i][j].id %>" class="ml-2 text-lg "><%= thisoptions[i][j].option %></label>
+                                                </li>
+                                        <% } %>
+                                    </ol>
+                                </div>
+                            </li>
+                        <% } %>
+                    </ol>
+                </div>
+            </div>
+            <div class="justify-center text-center mx-auto flex py-3">
+            <button onclick="launchElection()" class=" py-3 text-center justify-center mx-auto flex text-white bg-orange-400 rounded w-fit px-4 hover:bg-blue-600 ml-2 ">
+                Launch election
+            </button>
+        </div>
+        </div>
+    </div>
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+</body>
+</html>

@@ -27,15 +27,15 @@
     <link rel="stylesheet" href="./css/style.css">
     <title><%= title %></title>
 </head>
-<body class="bg-gray-50">
-    <%- include('header.ejs') %>
-    <div class="flex gap-1 mx-10 mt-6 bg-gray-50">
+<body class="bg-sky-100 ">
+    <div class="text-center justify-center"><%- include('header.ejs') %></div>
+    <div class="flex gap-1 mx-10 mt-6">
         <span>></span>
-        <a href="/election" class="text-purple-800 hover:text-purple-600">All Elections</a>
+        <a href="/election" class="text-black-800 hover:text-purple-600">All Elections</a>
         <span>></span>
-        <a href="/election/<%= id %>/" class="text-purple-800 hover:text-purple-600">Election</a>
+        <a href="/election/<%= id %>/" class="text-black-800 hover:text-purple-600">Election</a>
         <span>></span>
-        <a href="/election/<%= id %>/questions" class="text-purple-800 hover:text-purple-600">Questions</a>
+        <a href="/election/<%= id %>/questions" class="text-black-800 hover:text-purple-600">Questions</a>
     </div>
     <div class="grid grid-cols-6">
         <div class="col-start-2 col-span-4">
@@ -54,7 +54,7 @@
                 <ol class="list-decimal">
                     <% for(let i=0; i<thisoptions.length; i++) { %>
                         <li class="option-item">
-                            <div class="flex justify-between items-center w-full my-2 px-2 py-1 rounded-lg bg-purple-50">
+                            <div class="flex justify-between items-center w-full my-2 px-2 py-1 rounded-lg bg-stone-100">
                                 <p class="ml-2 text-lg "><%= thisoptions[i].option %></p>
                                 <div class="flex gap-2 text-purple-800">
                                 <div class="rounded w-fit px-2 py-1 flex gap-2 cursor-pointer hover:text-purple-600">
@@ -82,7 +82,7 @@
                         <input type="text" name="option" placeholder="Enter an option" class="border border-gray-300 text-gray-900 w-full rounded p-2 text-sm" required autofocus/>
                     </div>
                     <div class="flex-none">
-                        <button type="submit" class="bg-purple-600 text-white px-5 py-1.5 rounded mr-2 mb-2">Add answer option</button>
+                        <button type="submit" class="bg-orange-400 text-white px-5 py-1.5 rounded mr-2 mb-2 hover: bg-green-400">Add answer option</button>
                     </div>
                 </div>
             </form>

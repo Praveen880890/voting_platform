@@ -13,7 +13,9 @@ module.exports = {
         type: Sequelize.STRING
       },
       voterUnqPswd: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        unique:true,
+        allowNull:false
       },
       didVote: {
         type: Sequelize.BOOLEAN

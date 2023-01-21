@@ -24,6 +24,33 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "electionID",
       });
     }
+    static launchElection(id) {
+      return this.update(
+        {
+          Running: true,
+        },
+        {
+          returning: true,
+          where: {
+            id,
+          },
+        }
+      );
+    }
+    static endElection(id) {
+      return this.update(
+        {
+          Running: false,
+          Ended: true,
+        },
+        {
+          returning: true,
+          where: {
+            id,
+          },
+        }
+      );
+    }
     static addElection({ elecName, adminID, cstmUrl }) {
       return this.create({
         elecName,
@@ -44,6 +71,13 @@ module.exports = (sequelize, DataTypes) => {
           id,
         }
       })
+    }
+    static getElectionWithId(id) {
+      return this.findOne({
+        where: {
+          id,
+        },
+      });
     }
   }
   election.init({

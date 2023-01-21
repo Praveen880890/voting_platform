@@ -60,7 +60,7 @@
         <a href="/elections/<%= id %>/voters" class="flex justify-center text-cente hover:text-purple-800 text-purple-600 py-5">Manage voters</a>
         <% if (!Running) { %>
             <div class=" flex justify-center mx-auto text-center bg-orange-400 rounded w-fit px-4 py-1 hover:bg-blue-600">
-                <a href="/elections/<%= id %>/preview" class="text-white flex text-center justify-center">Preview & Launch election</a>
+                <a href="/election/<%= id %>/preview" class="text-white flex text-center justify-center">Preview & Launch election</a>
             </div>
         <% } %>
         <% if (Running) { %>

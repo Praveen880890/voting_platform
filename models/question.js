@@ -64,11 +64,11 @@ module.exports = (sequelize, DataTypes) => {
         electionID,
       });
     }
-    static updateQuestion({ question, description, id }) {
+    static updateQuestion({  elecQuestion, elecDescription, id }) {
       return this.update(
         {
-          question,
-          description,
+          elecQuestion,
+          elecDescription,
         },
         {
           returning: true,
