@@ -10,8 +10,8 @@
 </head>
 <body class="bg-sky-100">
     <div class="justify-center text-center"><%- include('header.ejs') %></div>
-    <h3 class="justify-center text-center text-2xl px-3 py-2 left">Hello, <%= username %></h3>
-    <a href="/signout" class="justify-center text-center flex text-right underline text-green-400 hover:text-red-400 px-3"> Signout</a> <br>
+    <h3 class="text-2xl px-3 py-2 left">Hello, <%= username %></h3>
+    <a href="/signout" class=" flex text-right underline text-orange-400 hover:text-green-400 px-3"> Signout</a> <br>
     <div class="my-6 mx-10">
         <div>
             <% if (messages.success) { %>
@@ -41,7 +41,7 @@
                     <% } %>
                 </ol>
                 <div class="py-5">
-                <div class="bg-green-400 text-center rounded  w-fit px-2 py-1 hover:bg-red-600 justify-center mx-auto text-center">
+                <div class="bg-orange-400 text-center rounded  w-fit px-2 py-1 hover:bg-green-600 justify-center mx-auto text-center">
                     <a href="/election/createNew" class="text-white">+ Create a new elections</a>
                 </div>
             </div>

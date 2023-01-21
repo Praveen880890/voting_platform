@@ -22,6 +22,7 @@
             <div class="mt-4 bg-white shadow-md rounded-lg text-left">
                 <form action="/admin" method="post" class="px-8 py-6">
                     <input type="hidden" name="_csrf" value="<%=csrfToken%>" />
+                    <p> "<%=csrfToken%>" </p>
                     <label for="firstName" class="block mt-3 font-semibold">First name</label>
                     <input id="firstName" name="firstName" type="text" placeholder="First name" class="border w-full h-5 px-3 py-5 mt-2 rounded-md" required>
                     <label for="lastName" class="block mt-3 font-semibold">Last name</label>
@@ -34,7 +35,7 @@
                 </form>
             </div>
             <div class="mt-4">
-                <p>have an account?</p><a href="/login" class="text-sm hover:text-blue-900"> Sign in</a>
+                <p>have an account?</p><a href="/signin" class="text-sm hover:text-blue-900"> Sign up</a>
             </div>
         </div>
     </div>

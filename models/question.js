@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "electionID",
       });
       question.hasMany(models.options, {
-        foreignKey: "questionId",
+        foreignKey: "questionID",
       });
       question.hasMany(models.Answers, {
         foreignKey: "questionID",
@@ -34,6 +34,20 @@ module.exports = (sequelize, DataTypes) => {
           id,
         },
       });
+    }
+    static updateQuestion({ elecQuestion, elecDescription, id }) {
+      return this.update(
+        {
+          elecQuestion,
+          elecDescription,
+        },
+        {
+          returning: true,
+          where: {
+            id,
+          },
+        }
+      );
     }
     static async gtQuestns(electionID) {
       return await this.findAll({
