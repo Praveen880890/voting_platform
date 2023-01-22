@@ -127,7 +127,6 @@ app.get(
     } 
 );
 app.get("/signup", (request, response) => {
-  console.log(request.csrfToken())
   response.render("signup", {
     title: "Admin Create a new account",
     csrfToken: request.csrfToken(),
@@ -578,7 +577,6 @@ app.post(
   "/election/:electionID/voters/create",
   connectEnsureLogin.ensureLoggedIn(),
   async (request, response) => {
-    console.log(request.body.voterUnqPswd);
       if (!request.body.voterUnqid) {
         request.flash("error", "Please enter voterID");
         return response.redirect(
@@ -648,7 +646,6 @@ app.get(
   async (request, response) => {
       try {
         const thiselection = await election.getElection(request.params.electionID);
-        console.log("asdfasdf");
         // if (request.user.id !== thiselection.adminID) {
         //   request.flash("error", "Invalid election ID");
         //   return response.redirect("/election");
@@ -709,6 +706,7 @@ app.put(
         console.log(error);
         return response.status(422).json(error);
       }
+      
     }
 );
 app.delete(
@@ -740,6 +738,7 @@ app.delete(
         console.log(error);
         return response.status(422).json(error);
       }
+      
     }
 );
 app.delete(
@@ -953,6 +952,7 @@ app.put(
     }
 );
 app.get("/e/:cstmUrl/voter", async (request, response) => {
+  
   try {
     if (request.user) {
       return response.redirect(`/e/${request.params.cstmUrl}`);
@@ -990,7 +990,6 @@ app.get("/e/:cstmUrl/", async (request, response) => {
   }
   try {
     const thiselection = await election.getElectionURL(request.params.cstmUrl);
-    console.log(thiselection.elecName + "jkhfjehrjkhjkhkjhj")
     if (thiselection.Ended) {
       return response.redirect(`/e/${thiselection.cstmUrl}/results`);
     }
@@ -1033,7 +1032,6 @@ app.post("/e/:cstmUrl", async (request, response) => {
   }
   try {
     let thiselection = await election.getElectionURL(request.params.cstmUrl);
-    console.log(thiselection.elecName + "ekllfjekljfkljkewlwjflkj")
     if (thiselection.Ended) {
       request.flash("error", "Cannot vote when election has ended");
       return response.redirect(`/election/${request.params.id}/results`);
