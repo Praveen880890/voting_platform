@@ -7,7 +7,7 @@ const { AdminCreate,
         options,
         question,
         voter,
-      answers } = require("./models");
+      Answers } = require("./models");
 const bodyParser = require("body-parser");
 const path = require("path");
 app.use(express.static(path.join(__dirname, "/public")));
@@ -39,6 +39,7 @@ app.use((request, response, next) => {
 app.use(passport.initialize());
 app.use(passport.session());
 passport.use(
+  "admin",
   new LocalStratergy(
     {
       usernameField: "email",
@@ -47,30 +48,48 @@ passport.use(
     (username, password, done) => {
       AdminCreate.findOne({ where: { email: username } })
         .then(async (user) => {
-          const val = await bcrypt.compare(password, user.password);
-          if (val) {
+          const result = await bcrypt.compare(password, user.password);
+          if (result) {
             return done(null, user);
           } else {
-            return done(null, false, { message: "Invalid password" });
+            return done(null, false, { message: "Invalid Password" });
           }
         })
-        .catch(() => {
-          return done(null, false, { message: "Invalid Email-ID" });
+        .catch(function () {
+          return done(null, false, { message: "Unrecognized Email" });
+        });
+    }
+  )
+);
+
+passport.use(
+  "voter",
+  new LocalStratergy(
+    {
+      usernameField: "voterUnqid",
+      passwordField: "voterUnqPswd",
+    },
+    (username, password, done) => {
+      voter.findOne({ where: { voterUnqid: username } })
+        .then(async (user) => {
+          const result = await bcrypt.compare(password, user.voterUnqPswd);
+          if (result) {
+            return done(null, user);
+          } else {
+            return done(null, false, { message: "Invalid Password" });
+          }
+        })
+        .catch(function () {
+          return done(null, false, { message: "Unrecognized UserID" });
         });
     }
   )
 );
 passport.serializeUser((user, done) => {
-  done(null, user.id);
+  done(null, user);
 });
-passport.deserializeUser((id, done) => {
-  AdminCreate.findByPk(id)
-    .then((user) => {
-      done(null, user);
-    })
-    .catch((error) => {
-      done(error, null);
-    });
+passport.deserializeUser((user, done) => {
+  done(null, user);
 });
 app.set("view engine", "ejs");
 app.get("/", (request, response) => {
@@ -130,7 +149,7 @@ app.get("/signout", (request, response, next) => {
 });
 app.post(
   "/session",
-  passport.authenticate("local", {
+  passport.authenticate("admin", {
     failureRedirect: "/login",
     failureFlash: true,
   }),
@@ -224,8 +243,8 @@ app.get(
           request.flash("error", "Invalid election ID");
           return response.redirect("/election");
         }
-        if (thiselection.ended) {
-          return response.redirect(`/election/${election.id}/results`);
+        if (thiselection.Ended) {
+          return response.redirect(`/election/${thiselection.id}/results`);
         }
         const numberOfQuestions = await question.getNumberOfQuestions(
           request.params.id
@@ -910,21 +929,20 @@ app.put(
     }
 );
 app.put(
-  "/elections/:electionID/end",
+  "/election/:electionID/end",
   connectEnsureLogin.ensureLoggedIn(),
   async (request, response) => {
-    if (request.user.role === "admin") {
       try {
-        const election = await Election.getElection(request.params.electionID);
-        if (request.user.id !== election.adminID) {
+        const thiselection = await election.getElection(request.params.electionID);
+        if (request.user.id !== thiselection.adminID) {
           return response.json({
             error: "Invalid Election ID",
           });
         }
-        if (!election.running) {
-          return response.json("Cannot end when election hasn't launched yet");
+        if (!thiselection.Running) {
+          return response.json("Cannot end the election before election being launched yet");
         }
-        const endElection = await Election.endElection(
+        const endElection = await election.endElection(
           request.params.electionID
         );
         return response.json(endElection);
@@ -932,11 +950,117 @@ app.put(
         console.log(error);
         return response.status(422).json(error);
       }
-    } else if (request.user.role === "voter") {
-      return response.redirect("/");
     }
+);
+app.get("/e/:cstmUrl/voter", async (request, response) => {
+  try {
+    if (request.user) {
+      return response.redirect(`/e/${request.params.cstmUrl}`);
+    }
+    const thiselection = await election.getElectionURL(request.params.cstmUrl);
+    return response.render("voterlogin", {
+      title: "Login in as Voter",
+      cstmUrl: request.params.cstmUrl,
+      electionID: thiselection.id,
+      csrfToken: request.csrfToken(),
+    });
+  } catch (error) {
+    console.log(error);
+    return response.status(422).json(error);
+  }
+});
+app.post(
+  "/e/:cstmUrl/voter",
+  passport.authenticate("voter", {
+    failureFlash: true,
+    failureRedirect: "back",
+  }),
+  async (request, response) => {
+    return response.redirect(`/e/${request.params.cstmUrl}`);
   }
 );
-
+app.get("/e/:cstmUrl/", async (request, response) => {
+  if (!request.user) {
+    request.flash("error", "Please login before trying to Vote");
+    return response.redirect(`/e/${request.params.cstmUrl}/voter`);
+  }
+  if (request.user.didVote) {
+    request.flash("error", "You have voted successfully");
+    return response.redirect(`/e/${request.params.cstmUrl}/results`);
+  }
+  try {
+    const thiselection = await election.getElectionURL(request.params.cstmUrl);
+    console.log(thiselection.elecName + "jkhfjehrjkhjkhkjhj")
+    if (thiselection.Ended) {
+      return response.redirect(`/e/${thiselection.cstmUrl}/results`);
+    }
+    if (request.user.position === "voter") {
+      if (thiselection.Running) {
+        const thisquestions = await question.gtQuestns(thiselection.id);
+        let thisoptions = [];
+        for (let vquestion in thisquestions) {
+          thisoptions.push(await options.gtOptns(thisquestions[vquestion].id));
+        }
+        return response.render("vote", {
+          title: thiselection.elecName,
+          electionID: thiselection.id,
+          thisquestions,
+          thisoptions,
+          cstmUrl: request.params.cstmUrl,
+          csrfToken: request.csrfToken(),
+        });
+      } else {
+        return response.render("404");
+      }
+    } else if (request.user.position === "admin") {
+      request.flash("error", "You cannot vote as Admin");
+      request.flash("error", "Please signout as Admin before trying to vote");
+      return response.redirect(`/elections/${election.id}`);
+    }
+  } catch (error) {
+    console.log(error);
+    return response.status(422).json(error);
+  }
+});
+app.post("/e/:cstmUrl", async (request, response) => {
+  if (!request.user) {
+    request.flash("error", "Please login before trying to Vote");
+    return response.redirect(`/e/${request.params.cstmUrl}/voter`);
+  }
+  if (request.user.didVote) {
+    request.flash("error", "You have voted successfully");
+    return response.redirect(`/e/${request.params.cstmUrl}/results`);
+  }
+  try {
+    let thiselection = await election.getElectionURL(request.params.cstmUrl);
+    console.log(thiselection.elecName + "ekllfjekljfkljkewlwjflkj")
+    if (thiselection.Ended) {
+      request.flash("error", "Cannot vote when election has ended");
+      return response.redirect(`/election/${request.params.id}/results`);
+    }
+    let thisquestions = await question.gtQuestns(thiselection.id);
+    for (let vquestion of thisquestions) {
+      let qid = `q-${vquestion.id}`;
+      let selectedOption = request.body[qid];
+      await Answers.addAnswer({
+        voterID: request.user.id,
+        electionID: thiselection.id,
+        questionID: thisquestions.id,
+        OptionBool: selectedOption,
+      });
+    }
+    await voter.markAsVoted(request.user.id);
+    return response.redirect(`/e/${request.params.cstmUrl}/results`);
+  } catch (error) {
+    console.log(error);
+    return response.status(422).json(error);
+  }
+});
+app.get("/e/:cstmUrl/results", async (request, response) => {
+  response.render("Thankyou");
+});
+app.get("/election/:id/results", async (request , response) =>{
+  response.render("thank-you")
+});
 
 module.exports = app;

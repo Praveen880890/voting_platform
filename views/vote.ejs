@@ -44,6 +44,8 @@
                 <% } %>
             </div>
             <div class="mt-4 bg-gray-200 shadow-md rounded-lg text-left">
+                <form action="/e/<%=cstmUrl%>" method="post">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                 <div class="py-2 px-8">
                     <ol class="list-decimal">
                         <% for(let i=0; i<thisquestions.length; i++) { %>
@@ -56,24 +58,24 @@
                                     <ol class="list-none">
                                         <% for(let j=0; j<thisoptions[i].length; j++) { %>
                                                 <li class="option-item mt-2 cursor-pointer">
-                                                    <input type="radio" id="<%= thisoptions[i][j].id %>" class="cursor-pointer" name="answer-<%= thisquestions[i].id %>">
+                                                    <input type="radio" id="<%= thisoptions[i][j].id %>" class="cursor-pointer" name="q-<%= thisquestions[i].id %>" value="<%= thisoptions[i][j].id %>">
                                                     <label class="px-1 my-2 cursor-pointer" for="<%= thisoptions[i][j].id %>" class="ml-2 text-lg "><%= thisoptions[i][j].option %></label>
                                                 </li>
                                         <% } %>
+                                        <div class="justify-center text-center mx-auto flex py-3">
                                     </ol>
                                 </div>
                             </li>
                         <% } %>
                     </ol>
                 </div>
+                <button type="submit" class=" py-3 text-center justify-center mx-auto flex text-white bg-orange-400 rounded w-fit px-4 hover:bg-blue-600 ml-2 ">
+                    Submit
+                 </button>
+                </form>
             </div>
-            <div class="justify-center text-center mx-auto flex py-3">
-            <button onclick="launchElection()" class=" py-3 text-center justify-center mx-auto flex text-white bg-orange-400 rounded w-fit px-4 hover:bg-blue-600 ml-2 ">
-                Launch election
-            </button>
         </div>
         </div>
     </div>
-    <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
 </body>
 </html>

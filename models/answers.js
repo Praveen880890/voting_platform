@@ -24,6 +24,15 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "OptionBool",
       });
     }
+    static addAnswer({ voterID, electionID, questionID, OptionBool }) {
+      return this.create({
+        voterID,
+        electionID,
+        questionID,
+        OptionBool,
+      });
+    }
+    
     
   }
   Answers.init({

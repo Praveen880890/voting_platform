@@ -37,7 +37,14 @@ module.exports = (sequelize, DataTypes) => {
         questionID,
       });
     }
-
+    static gtOptns(questionID) {
+      return this.findAll({
+        where: {
+          questionID,
+        },
+        order: [["id", "ASC"]],
+      });
+    }
     static updateOption({ option, id }) {
       return this.update(
         {

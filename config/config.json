@@ -19,3 +19,13 @@
   }
 }
 
+"repository": {
+  "type": "git",
+  "url": "git+https://github.com/Praveen880890/voting_platform.git"
+},
+"author": "Praveen",
+"license": "ISC",
+"bugs": {
+  "url": "https://github.com/Praveen880890/voting_platform/issues"
+},
+"homepage": "https://github.com/Praveen880890/voting_platform#readme",

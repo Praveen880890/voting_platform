@@ -7,7 +7,7 @@
     <meta name="csrf-token" content="<%= csrfToken %>">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="./css/style.css" rel="stylesheet">
-    <title>Create New Voter </title>
+    <title>Voter Login</title>
 </head>
 <body class="bg-sky-100">
     <div class="text-center justify-center"><%- include('header.ejs') %> </div>    
@@ -18,10 +18,10 @@
                <% } %>
              <% } %>
           </div>
-          <h2 class="text-2xl text-center font-bold my-5"> Add New Voter From Here</h2>
+          <h2 class="text-2xl text-center font-bold my-5">Please! login here</h2>
             <div class="mx-auto py-5 px-3 max-w-md bg-white mt-4 shadow-md rounded-lg text-left">
                     <div class="space-y-6 text-base leading-7 text-ray-600 mx-auto text-center justify-center">
-                        <form action="/election/<%= id %>/voters/create" method="post">
+                        <form action="/e/<%=cstmUrl%>/voter" method="post">
                             <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                             <label for="voterUnqid" class="text-md w-40 inline-block font-medium leading-5 text-gray-700 w-full">
                              Enter Voter ID

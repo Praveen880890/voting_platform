@@ -19,10 +19,12 @@ module.exports = {
         unique:true
       },
       Running: {
-        type: Sequelize.BOOLEAN
+        type: Sequelize.BOOLEAN,
+        defaultValue:false
       },
       Ended: {
-        type: Sequelize.BOOLEAN
+        type: Sequelize.BOOLEAN,
+        defaultValue:false
       },
       createdAt: {
         allowNull: false,

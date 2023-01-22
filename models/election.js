@@ -65,6 +65,13 @@ module.exports = (sequelize, DataTypes) => {
         }
       })
     }
+    static async getElectionURL(cstmUrl){
+      return this.findOne({
+        where:{
+          cstmUrl,
+        }
+      })
+    }
     static async getElection(id){
       return this.findOne({
         where:{
