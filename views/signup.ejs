@@ -9,9 +9,10 @@
     <meta name="csrf-token" content="<%=csrfToken%>">
 </head>
 <body class="bg-sky-100">
-    <div class="relative flex min-h-screen text-gray-900 flex-col justify-center overflow-hidden py-6 sm:py-12">
+    <h1 class="mx-auto justify-center text-center text-black-800 text-3xl py-3">Online Voting platform</h1>
+    <div class="relative flex text-gray-900 flex-col justify-center overflow-hidden py-2 sm:py-3">
         <div class="relative py-3 sm:w-auto mx-auto text-center">
-            <span class="text-2xl font-light px-8 ">Create a new Account</span>
+            <span class="text-2xl text-bold text-black-800 font-light px-8 ">Create a new Account</span>
             <div>
                 <% if (messages && messages.error && messages.error.length > 0) { %>
                     <% for(var i=0; i<messages.error.length; i++) { %>
@@ -22,7 +23,6 @@
             <div class="mt-4 bg-white shadow-md rounded-lg text-left">
                 <form action="/admin" method="post" class="px-8 py-6">
                     <input type="hidden" name="_csrf" value="<%=csrfToken%>" />
-                    <p> "<%=csrfToken%>" </p>
                     <label for="firstName" class="block mt-3 font-semibold">First name</label>
                     <input id="firstName" name="firstName" type="text" placeholder="First name" class="border w-full h-5 px-3 py-5 mt-2 rounded-md" required>
                     <label for="lastName" class="block mt-3 font-semibold">Last name</label>
@@ -31,8 +31,11 @@
                     <input id="email" name="email" type="email" placeholder="Email" class="border w-full h-5 px-3 py-5 mt-2" required>
                     <label for="password" class="block mt-3 font-semibold">Password</label>
                     <input id="password" name="password" type="password" placeholder="Password" class="border w-full h-5 px-3 py-5 mt-2" required>
-                    <button type="submit" class="mt-6 bg-green-600 w-full text-white py-2 px-6 rounded-md hover:bg-blue-800 ">Create account</button>
+                    <button type="submit" class="mt-6 bg-green-600 w-full text-white py-2 px-6 rounded-md">Sign up</button>
                 </form>
+            </div>
+            <div class="mt-4">
+                <p>Already have an account?</p><a href="/login" class="text-sm text-green-900"> Sign in</a>
             </div>
         </div>
     </div>

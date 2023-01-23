@@ -18,7 +18,7 @@ const login = async (agent, username, password) => {
       _csrf: csrfToken,
     });
   };
-describe("Online voting", function () {
+describe("Online voting platform", function () {
     beforeAll(async () => {
       await db.sequelize.sync({ force: true });
       server = app.listen(4040, () => {});
@@ -37,9 +37,9 @@ test("Sign up", async () => {
     let res = await agent.get("/signup");
     const csrfToken = getCsrfToken(res);
     res = await agent.post("/admin").send({
-      firstName: "indhra",
-      lastName: "lochan",
-      email: "indra@gmail.com",
+      firstName: "praveen",
+      lastName: "rao",
+      email: "rao@gmail.com",
       password: "12345678",
       _csrf: csrfToken,
     });
@@ -49,7 +49,7 @@ test("Sign in", async () => {
     const agent = request.agent(server);
     let res = await agent.get("/election");
     expect(res.statusCode).toBe(302);
-    await login(agent, "indra@gmail.com", "12345678");
+    await login(agent, "rao@gmail.com", "12345678");
     res = await agent.get("/election");
     expect(res.statusCode).toBe(200);
 });
@@ -63,24 +63,24 @@ test("Sign out", async () => {
 });
 test("Creating a New Election", async () => {
     const agent = request.agent(server);
-    await login(agent, "indra@gmail.com", "12345678");
+    await login(agent, "rao@gmail.com", "12345678");
     const res = await agent.get("/election/createNew");
     const csrfToken = getCsrfToken(res);
     const response = await agent.post("/election").send({
-      elecName: "Whos the next president",
-      cstmUrl: "president",
+      elecName: "who the cm",
+      cstmUrl: "jagan",
       _csrf: csrfToken,
     });
     expect(response.statusCode).toBe(302);
 });
 test("Adding a new question to the created election", async () => {
     const agent = request.agent(server);
-    await login(agent, "indra@gmail.com", "12345678");
+    await login(agent, "rao@gmail.com", "12345678");
     let res = await agent.get("/election/create");
     let csrfToken = getCsrfToken(res);
     await agent.post("/election").send({
-        elecName: "Whos the next richest man",
-        cstmUrl: "Richest",
+        elecName: "who is the cr",
+        cstmUrl: "ramu",
       _csrf: csrfToken,
     });
     const groupedElectionsResponse = await agent
@@ -94,8 +94,8 @@ test("Adding a new question to the created election", async () => {
     let response = await agent
       .post(`/election/${latestElection.id}/questions/create`)
       .send({
-        question: "what is going to happen in future",
-        description: "No one knows",
+        question: "what is a apple",
+        description: "it is a fruit",
         _csrf: csrfToken,
       });
     expect(response.statusCode).toBe(302);

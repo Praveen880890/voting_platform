@@ -9,10 +9,10 @@
     <meta name="csrf-token" content="<%= csrfToken %>">
 </head>
 <body class="bg-sky-100">
-    <h1 class="mx-auto justify-center text-center text-black-800 text-3xl py-3">Online Voting platform</h1>
-    <div class="relative flex min-h-screen text-gray-900 flex-col justify-center overflow-hidden py-3 sm:py-12">
-        <div class="relative py-3 sm:w-auto mx-auto text-center">
-            <span class="text-2xl font-light px-8 ">Login to your account</span>
+    <h1 class="mx-auto justify-center text-center text-black-800 text-3xl py-3"><a href="/">Online Voting Platform</a></h1>
+    <div class="relative flex text-gray-900 flex-col justify-center overflow-hidden">
+        <div class="relative py-1 sm:w-auto mx-auto text-center">
+            <span class="text-2xl font-light px-3 ">Login to your account</span>
             <div>
                 <% if (messages && messages.error && messages.error.length > 0) { %>
                     <% for(var i=0; i<messages.error.length; i++) { %>
@@ -27,11 +27,11 @@
                     <input id="email" name="email" type="email" placeholder="Email" class="border w-full h-5 px-3 py-5 mt-2 hover:outline-none focus:outline-none focus:ring-blue-500 focus:ring-1 rounded-md" required>
                     <label for="password" class="block mt-3 font-semibold">Password</label>
                     <input id="password" name="password" type="password" placeholder="Password" class="border w-full h-5 px-3 py-5 mt-2 hover:outline-none focus:outline-none focus:ring-blue-500 focus:ring-1 rounded-md" required>
-                    <button type="submit" class="mt-6 w-full bg-green-600 text-white py-2 px-6 rounded-md hover:bg-blue-800 ">Login</button>
+                    <button type="submit" class="mt-6 w-full bg-green-500 text-white py-2 px-6 rounded-md ">Login</button>
                 </form>
             </div>
             <div class="mt-4">
-                <p>Don't have an account?</p><a href="/signup" class="text-sm hover:text-blue-900"> Sign up</a>
+                <p>Dosen't have an account?</p><a href="/signup" class="text-sm text-green-900"> Sign up</a>
             </div>
         </div>
     </div>

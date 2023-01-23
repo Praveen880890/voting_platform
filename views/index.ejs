@@ -1,22 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="./css/style.css">
-    <title><%= title %></title>
 </head>
-<body class="bg-sky-100">
-    <div class="var">
-        <div class="grid grid-cols-9 grid-rows-6">
-            <div class="col-start-4 col-span-3 row-start-2 text-lg">
-                <div><h1 class="flex text-center justify-center text-3xl my-4 px-3 py-3 font-semibold text-gray-900">Online Voting Platform</h1></div>
-            <p class="py-1">New here? <a class="text-blue-600" href="/signup">Sign-up</a></p>
-            <p class="py-1">Already have an account? <a class="text-blue-600" href="/login">Sign-in</a></p>
+
+<body class="w-full h-full overflow-hidden flex min-h-screen flex-col">
+    <div>
+    <div class="flex mx-auto justify-center text-center px-3 ">
+    </div>
+    <div class="mx-auto flex justify-center text-center px-3 font-bold text-3xl text-gray-900 py-5">
+        <h1>ONLINE VOTING PLATFORM </h1>
+    </div>
+    <div class="flex w-fit">
+        <div class="flex flex-col md:flex-row md:max-w-full text-gray-900 space-x-4">
+            <div class="flex flex-col justify-center w-fit space-x-4 text-justify">
+                <h2 class="text-gray-900 mb-2 text-center justify-center text-2xl font-bold">SIMPLE & DEMOCRATIC</h2>
+                <p class="text-gray-900 text-base mb-4 px-12 py-10" style="font-size: 26px">
+
+
+                    Electronic voting technology intends to speed the counting of ballots, reduce the cost of paying staff to count votes manually and can provide improved accessibility for disabled voters. Also in the long term, expenses are expected to decrease. Results can be reported and published faster. Voters save time and cost by being able to vote independently from their location. This may increase overall voter turnout. The citizen groups benefiting most from electronic elections are the ones living abroad, citizens living in rural areas far away from polling stations and the disabled with mobility impairments.</p>
+                <h3 class="text-gray-900 text-xl font-medium mb-2 text-center justify-center py-10">Every vote counts! Log in and conduct them your way.</h3>
+                <div class="col-start-8 col-span-3 row-start-2 text-lg text-center justify-center">
+                <p class="py-1">New here? <a class="text-blue-600" href="/signup">Sign-up</a></p>
+                <p class="py-1">Already have an account? <a class="text-blue-600" href="/login">Sign-in</a></p>
+                </div>
+            </div>
+            </div>
         </div>
     </div>
+
 </div>
+</div>
+<footer class="text-center lg:text-left mt-24 py-0 text-end justify-end">
+    <div class="text-gray-700 text-right justify-end">
+      © 2023 Copyright:
+      <a class="text-blue-400" href="https://github.com/Praveen880890">S. Praveen Rao..</a>
+    </div>
+  </footer>
 </body>
 </html>

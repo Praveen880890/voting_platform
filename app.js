@@ -26,7 +26,7 @@ app.use(cookieParser("Some secret String"));
 app.use(csrf("this_should_be_32_character_long", ["POST", "PUT", "DELETE"]));
 app.use(
   session({
-    secret: "my-super-secret-key-2837428907583420",
+    secret: "my-secret-key-5454545215754511",
     cookie: {
       maxAge: 24 * 60 * 60 * 1000,
     },
@@ -166,10 +166,8 @@ app.post("/admin", async (request, response) => {
       password: Pwd,
     
     });
-    console.log("hgfgfdjgdjthgfjhg");
     request.login(admin, (err) => {
       if (err) {
-        console.log("zqwwwwwwwwwwwwwwwq");
         return response.redirect("/");
       } else {
         return response.redirect("/election");
@@ -213,16 +211,11 @@ app.post(
         return response.redirect("/election/createNew");
       }
       try {
-        console.log("asdfads");
-        console.log(request.body.elecName);
-        console.log(request.body.cstmUrl);
-        console.log(request.user.id);
         await election.addElection({
           elecName: request.body.elecName,
           cstmUrl: request.body.cstmUrl,
           adminID: request.user.id,
         });
-        console.log("bbbbbbbb");
         return response.redirect("/election");
       } 
       catch (error) {
@@ -628,7 +621,6 @@ app.get(
   async (request, response) => {
     const votersCount = await voter.countOFVoters(request.params.id);
     const thisvoters = await voter.getVoters(request.params.id);
-    console.log("yugdywgydgy "+ thisvoters[0]);
     const thisElection = await election.getElectionWithId(request.params.id);
     const thisElectionName = thisElection.eleName;
     return response.render("voters", {
@@ -646,10 +638,6 @@ app.get(
   async (request, response) => {
       try {
         const thiselection = await election.getElection(request.params.electionID);
-        // if (request.user.id !== thiselection.adminID) {
-        //   request.flash("error", "Invalid election ID");
-        //   return response.redirect("/election");
-        // }
         if (thiselection.Running) {
           request.flash("error", "Cannot edit while election is running");
           return response.redirect(`/election/${request.params.electionID}/`);

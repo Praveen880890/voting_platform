@@ -47,7 +47,7 @@
         </div>
         <div class="flex-auto">
             <div class="mx-4">
-                <p class="text-black-600 mx-auto justify-center text-center"><%= (thisquestions.length==0)?"You haven't added any questions yet!":"" %></p>
+                <p class="text-black-600 mx-auto justify-center text-center"><%= (thisquestions.length==0)?"No questions has added yet!":"" %></p>
                 <ol class="list-decimal flex mx-auto text-center justify-center text-center">
                     <% for (let i=0; i<thisquestions.length; i++) { %>
                         <li>
@@ -78,8 +78,8 @@
                 </ol>
             </div>
         </div>
-        <div class=" mx-auto flex bg-orange-400 rounded w-fit px-2 py-1 hover:bg-blue-600 text-center justify-center">
-            <a href="/election/<%=electionID%>/questions/create" class="text-white">+ Add a new question</a>
+        <div class=" mx-auto flex bg-blue-400 rounded w-fit px-2 py-1 text-center justify-center">
+            <a href="/election/<%=electionID%>/questions/create" class="text-white"> Add a new question</a>
         </div>
     </div>
 </body>
