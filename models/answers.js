@@ -24,6 +24,15 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "OptionBool",
       });
     }
+    static async gtOptnCount({ electionID, OptionBool, questionID }) {
+      return await this.count({
+        where: {
+          electionID,
+          OptionBool,
+          questionID,
+        },
+      });
+    }
     static addAnswer({ voterID, electionID, questionID, OptionBool }) {
       return this.create({
         voterID,
@@ -32,7 +41,13 @@ module.exports = (sequelize, DataTypes) => {
         OptionBool,
       });
     }
-    
+    static async gtanswers(electionID) {
+      return await this.findAll({
+        where: {
+          electionID,
+        },
+      });
+    }
     
   }
   Answers.init({

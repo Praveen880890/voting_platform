@@ -9,6 +9,14 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
+    static createAdmin({ firstName, lastName, email, password }) {
+      return this.create({
+        firstName,
+        lastName,
+        email,
+        password,
+      });
+    }
     static associate(models) {
       // define association here
       AdminCreate.hasMany(models.election,{

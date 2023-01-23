@@ -38,6 +38,7 @@ module.exports = {
     });
     await queryInterface.addColumn("Answers", "OptionBool", {
       type: Sequelize.DataTypes.INTEGER,
+      allowNull: false,
     });
     await queryInterface.addConstraint("Answers", {
       fields: ["OptionBool"],

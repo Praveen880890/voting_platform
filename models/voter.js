@@ -16,6 +16,7 @@ module.exports = (sequelize, DataTypes) => {
       });
       voter.hasMany(models.Answers, {
         foreignKey: "voterID",
+        onDelete:"CASCADE"
       });
     }
     static async getNumberOfVoters(electionID) {
@@ -42,6 +43,14 @@ module.exports = (sequelize, DataTypes) => {
         where: {
           electionID,
           didVote: true,
+        },
+      });
+    }
+    static async Pending(electionID) {
+      return await this.count({
+        where: {
+          electionID,
+          didVote: false,
         },
       });
     }
